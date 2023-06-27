@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+
+  database:
+    image: kartoza/postgis:14
+    container_name: database4${COMPOSE_PROJECT_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASS=${POSTGRES_PASS:-WahiIrEiAL7}
+      - POSTGRES_DB=${POSTGRES_DB:-postgres}
+    restart: always
+    networks:
+      - dpw-network
+
+  backend:
+      build:
+          context: .
+          dockerfile: Dockerfile
+      container_name: backend4${COMPOSE_PROJECT_NAME}
+      command: python3 manage.py runserver 0.0.0.0:9182
+      env_file:
+          - .env_dev
+      volumes:
+          - .:/app
+          - static_volume:/app/staticfiles
+          - media_volume:/app/mediafiles
+      ports:
+          - '9182:9182'
+      restart: always
+      depends_on:
+          - postgres-db
+      networks:
+          - dpw-network
+
+  frontend:
+    build:
+        context: ./dpw_client
+        dockerfile: Dockerfile
+    container_name: frontend4${COMPOSE_PROJECT_NAME}
+    volumes:
+        - ./dpw_client:/usr/src/app
+    ports:
+        - "3000:3000"
+        #    expose:
+        #      - 3000
+    environment:
+        - NODE_ENV=development
+    depends_on:
+        - dpw-api
+    networks:
+        - dpw-network

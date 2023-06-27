@@ -1,0 +1,126 @@
+= Mpesa Locations - Simple Web Map App
+
+Interactive web application showing location of MPESA retailers obtained via the Google Geolocation API.
+
+
+== Project overview
+
+Mpesa Locations is a simplified tool for visualizing geo-location points data. GIS Project managers/analysts can have an overview of all the mpesa locations in various counties.
+
+[IMPORTANT]
+===========
+This README just outlines the basic project setup and layout.
+Make sure to check out the `README` files for the front-end and back-end.
+As they document how to set up, run tests as well as linters.
+
+    * Back-end readme: link:backend/README.adoc[backend/README.adoc]
+    * Front-end readme: link:frontend/README.adoc[frontend/README.adoc]
+===========
+
+=== Structure overview
+
+NOTE: It is best to follow the structure section of the README in GitHub or
+    GitLab since the links work best there.
+
+The application is split into two parts – the back-end (written in Python &amp;
+Django), and the front-end (written in JavaScript &amp; React).
+
+The general folder structure for the project can be seen below:
+
+----
+├── backend            # The Django app, back-end of the project
+│   ├── data           # GIS data and untility folder
+│   ├── mpesa_api      # The Django project folder
+│   ├── mpesa_loc      # The mpesa location application
+│   ├── Pipenv         # Python dependencies
+│   ├── Pipenv.lock    # Packages and hashes supporting more secure verification
+│   ├── README.md      # Overview of the backend project
+├── docker             # Includes Docker files for both front and back-end
+├── frontend           # The React app, front-end of the project
+├── Makefile           # A bunch of utility commands to help developers
+├── README.md          # General overview of the project (current file)
+
+----
+
+To perform some routine operations, a link:Makefile[Makefile] with a set of `make`
+commands is provided. In order to run these commands, the GNU `make` utility
+needs to be installed. Some of the commands are listed below.
+
+TIP:  To see exactly what a make command is doing, you can run it with the `-n` argument. +
+ `make migrate -n` will output: +
+ ```echo -e "\033[0;36mRunning django migrations:\033[0m" +
+    docker-compose run --rm django ./manage.py migrate ``` +
+ This that you can see how to run arbitrary django or node commands.
+
+=== Setup
+
+
+==== System Prerequisites
+
+To be able to run the project in Docker environment, it's necessary to have
+https://docs.docker.com/[`docker`] and
+https://docs.docker.com/compose/[`docker-compose`] installed.\
+
+TIP:  Please refer to
+https://docs.docker.com/install/[Docker installation docs] and +
+https://docs.docker.com/compose/install/[Docker Compose
+installation docs] to install them.
+
+
+=== QuickStart
+
+To build and setup the application from the ground up, just type:
+
+[source,bash]
+----
+make setup
+----
+
+This will create the necessary Docker containers and install the required
+Python and NPM packages.
+
+==== Database
+
+To start the database will be empty.
+
+`make setup` also runs migrations automatically.
+
+To manually migrate the database, run:
+
+----
+make migrate
+----
+
+
+===== Application data
+
+At the start the project has no data in the database. No users, or projects.
+
+.To create a superuser:
+----
+make superuser
+----
+
+.To load initial data for projects:
+----
+make load_initial_data
+----
+
+
+
+==== Running the application
+
+----
+make runserver
+----
+
+After a successful startup, the application should be accessible at
+http://127.0.0.1:8000.
+
+[TIP]
+=====
+There are a number of other useful `make` commands which you can check out with
+`make help` or by looking at the link:Makefile[Makefile].
+
+Also make commands can be chained together: `make setup superuser load_initial_data` will run all the above commands in order.
+=====

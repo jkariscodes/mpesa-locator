@@ -1,0 +1,15 @@
+FROM node:16.20.0-bullseye-slim
+# Set environment to development
+ENV NODE_ENV=development
+# Create user to run Node as root is not recommended
+USER node
+# Set the working directory
+WORKDIR /usr/src/app
+# Copy node_modules folder (node_modules must be present)
+COPY --chown=node:node ./frontend/node_modules /usr/src/app/node_modules
+# Copy the rest of the application source code to the container
+COPY --chown=node:node ./frontend /usr/src/app
+# Expose the port that the application will listen on
+EXPOSE 5173
+#  Start the application
+CMD [ "npm", "run", "dev", "--", "--host" ]
