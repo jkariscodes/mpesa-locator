@@ -1,0 +1,55 @@
+:toc:
+= Mpesa Locations - Front-End
+
+The front-end of this application is a React app that's rendered inside a Django and that fetches required data from the REST API that the back-end exposes.
+
+== Folder structure
+
+The source code for the front-end is in the link:mpesa-app/src/[`mpesa-app/src/`] folder.
+
+
+
+== Testing
+
+https://testing-library.com/docs/react-testing-library/intro[React Testing
+Library] is used
+for testing React components in this project.
+
+== Routing
+
+== Communication with the back-end
+
+== Forms
+
+
+== Linting
+
+ESLint and Prettier are set up and should work out of the box. You can run `make
+eslint` to check your code for linting errors.
+
+=== Formatting
+
+`make eslint-fix` will have eslint try to fix any errors which it is able to.
+
+== Notes
+
+Depending on your development environment set up, you might need to install the
+`npm` packages locally (it can help your editor with autocompletion and
+linting):
+
+[source,bash]
+----
+# From the project root
+cd frontend/mpesa-app
+npm install
+----
+
+You should now have the packages installed locally to `frontend/mpesa-app/node_modules`
+and you should be able to run `npm` scripts locally (not through Docker):
+
+[source,bash]
+----
+npm run test
+npm run lint
+----
+

@@ -1,0 +1,68 @@
+:toc:
+= Mpesa Location Back-End
+
+The back-end consists of a Docker container with _Python 3.10_ and _Django 4.2.2_.
+
+All Python package requirements are listed in
+link:Pipfile[`Pipfile`] and their dependencies and associated hashes  in link:Pipfile.lock[`Pipfile.lock`] which supports more secure verification and enables deterministic builds. Refer to link:https://pipenv.pypa.io/[Pipenv docs] for more details. The initial requirements include:
+
+* https://docs.djangoproject.com/en/4.2/[Django] as the base framework
+* http://pythonhosted.org/Markdown/siteindex.html[markdown] for rendering
+ markdown in HTML
+* https://www.django-rest-framework.org/[djangorestframework] for creating the
+ API for the front-end to consume
+* https://github.com/openwisp/django-rest-framework-gis/[djangorestframework-gis] for adding
+ geographic add-ons for Django Rest Framework
+* https://docs.pytest.org[pytest] for writing tests
+* https://github.com/psf/black[black] for linting and automatically formatting
+ the code
+* https://django-debug-toolbar.readthedocs.io/[Django Debug
+ Toolbar] to
+ help with debugging
+* https://psycopg.org/psycopg3/docs/[psycopg] Modern implementation of a PostgreSQL adapter for Python using Psycopg3
+* https://psycopg.org/psycopg3/docs/[psycopg-binary] to
+ help with development using psycopg3 using pre-compiled libraries
+* https://django-leaflet.readthedocs.io/en/latest/[django-leaflet] to
+ enable using leaflet assets and object in Django project
+
+If you'd like to install additional dependencies, use `pipenv shell` to create a virtual environment, then run `pipenv install <your package>` which automatically adds them to the
+link:Pipfile[`Pipfile`] file and rebuild the Docker containers
+with `make build-dev` for development and `make build` in production.
+
+The application uses the _PostGIS_ database back-end by default.
+
+== Apps
+
+There are two Django `apps` in this application:
+
+* link:users[`users`] app - Facilitates authentication concerns like logging the user in through the login form.
+* link:mpesa_loc/[`mpesa_loc`] app - The core business logic of the application –
+ is serving as a GIS backend. Exposes a REST API that can be consumed by the front-end. Everything related to the API is in the
+ link:mpesa_api/rest[`projects/rest/`] folder. This includes very standard Django
+ REST Framework viewsets in link:mpesa_api/rest/views.py[`rest/views.py`],
+ serializers in link:mpesa_api/rest/serializers.py[`rest/serializers.py`], and
+ registering the routes from those viewsets in
+ link:mpesa_api/rest/urls.py[`rest/urls.py`].
+
+There are also some tests in the link:mpesa_api/tests.py[`mpesa_api/tests`] and
+link:users/tests.py[`users/tests`] folders and files.
+
+== Linting
+
+https://github.com/psf/black[Black] is used to automatically format and lint
+files. The `make lint-django` command checks that the project is correctly
+formatted.
+
+You can set up your editor to automatically format Python files using Black
+following the instructions https://github.com/psf/black#editor-integration[on Black's GitHub
+page].
+
+You can also use the `make lint-django-fix` command to automatically format all
+Python files in the project.
+
+== Front-end
+
+The front-end is a React app that's rendered through Django.
+
+Read more about how the front-end works in the link:../frontend/README.adoc[frontend
+`README.adoc`].
