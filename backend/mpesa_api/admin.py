@@ -1,3 +1,10 @@
-from django.contrib import admin
+from django.contrib.gis import admin
+from leaflet.admin import LeafletGeoAdmin
+from .models import MpesaPoints
 
-# Register your models here.
+
+@admin.register(MpesaPoints)
+class MpesaPoints(LeafletGeoAdmin):
+    list_display = ('formatted_field', 'input_stri', 'county',)
+    list_filter = ('county',)
+    list_per_page = 100
