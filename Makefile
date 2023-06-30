@@ -19,24 +19,27 @@ help:
 	@echo -e "$(CYAN)make build-backend-dev$(COFF)              		- Builds or rebuilds backend services in development"
 	@echo -e "$(CYAN)make build-frontend$(COFF)                 		- Builds or rebuilds frontend"
 	@echo -e "$(CYAN)make build-frontend-dev$(COFF)             		- Builds or rebuilds frontend services in development"
-	@echo -e "$(RED)make start-all-services$(COFF)             		- Starts all services"
-	@echo -e "$(RED)make start-all-services-dev$(COFF)         		- Starts all services in development"
+	@echo -e "$(RED)make start-all-services$(COFF)             		    - Starts all services"
+	@echo -e "$(RED)make start-all-services-dev$(COFF)         		    - Starts all services in development"
 	@echo -e "$(RED)make start-backend$(COFF)             				- Starts backend service"
 	@echo -e "$(RED)make start-backend-dev$(COFF)             			- Starts backend service in development"
-	@echo -e "$(RED)make start-frontend$(COFF)             			- Starts frontend service"
-	@echo -e "$(RED)make start-frontend-dev$(COFF)             		- Starts frontend service in development"
+	@echo -e "$(RED)make start-frontend$(COFF)             			    - Starts frontend service"
+	@echo -e "$(RED)make start-frontend-dev$(COFF)             		    - Starts frontend service in development"
 	@echo -e "$(GRAY)make stop-all-services$(COFF)             			- Stops all services"
-	@echo -e "$(GRAY)make stop-all-services-dev$(COFF)             			- Stops all services"
+	@echo -e "$(GRAY)make stop-all-services-dev$(COFF)             		- Stops all services"
 	@echo -e "$(GRAY)make stop-backend$(COFF)             				- Stops backend service"
 	@echo -e "$(GRAY)make stop-backend-dev$(COFF)             			- Stops backend service in development"
 	@echo -e "$(GRAY)make stop-frontend$(COFF)             				- Stops frontend service"
 	@echo -e "$(GRAY)make stop-frontend-dev$(COFF)             			- Stops frontend service in development"
+	@echo -e "$(GRAY)make delete-all-volumes$(COFF)             		- Deletes all volumes"
 	@echo -e "$(PURPLE)make makemigrations$(COFF)               		- Runs django's makemigrations command"
 	@echo -e "$(PURPLE)make makemigrations-dev$(COFF)           		- Runs django's makemigrations command in development"
 	@echo -e "$(PURPLE)make migrate$(COFF)                      		- Runs django's migrate command"
 	@echo -e "$(PURPLE)make migrate-dev$(COFF)                  		- Runs django's migrate command in development"
 	@echo -e "$(PURPLE)make load-initial-data$(COFF)                  	- Loads django's fixtures"
 	@echo -e "$(PURPLE)make load-initial-data-dev$(COFF)                - Loads django's fixtures in development"
+	@echo -e "$(PURPLE)make load-gis-data$(COFF)                        - Loads GIS data into the database"
+	@echo -e "$(PURPLE)make load-gis-data-dev$(COFF)                    - Loads GIS data into the database in development"
 	@echo -e "$(PURPLE))make create-superuser$(COFF)                   	- Runs django's createsuperuser command"
 	@echo -e "$(PURPLE))make create-superuser-dev$(COFF)               	- Runs django's createsuperuser command in development"
 	@echo -e "$(PURPLE)make collectstatic$(COFF)                		- Runs the Django's collectstatic command"
@@ -55,8 +58,8 @@ help:
 	@echo -e "$(YELLOW)make show-frontend-logs-interactive-dev$(COFF)  	- Shows frontend logs interactively in development"
 	@echo -e "$(BLUE)make eslint$(COFF) 								- Runs ESLint in frontend"
 	@echo -e "$(BLUE)make eslint-fix$(COFF) 							- Fix code using ESLint in frontend"
-	@echo -e "$(BLUE)make lint-backend$(COFF) 						- Runs Black check on backend"
-	@echo -e "$(BLUE)make lint-backend-fix$(COFF) 					- Runs Black formatting in backend"
+	@echo -e "$(BLUE)make lint-backend$(COFF) 						    - Runs Black check on backend"
+	@echo -e "$(BLUE)make lint-backend-fix$(COFF) 					    - Runs Black formatting in backend"
 	@echo -e "$(BLUE)make quality$(COFF) 								- Runs code quality tests on your code"
 	@echo -e "$(BLUE)make format$(COFF) 								- Runs code formatters on your code"
 
@@ -90,7 +93,7 @@ start-all-services:
 
 start-all-services-dev:
 	@echo -e "$(RED)Starting all services in development:$(COFF)"
-	@docker-compose -f docker-compose.yml up -d
+	@docker-compose -f docker-compose-dev.yml up -d
 
 start-backend:
 	@echo -e "$(RED)Starting backend services:$(COFF)"
@@ -114,7 +117,7 @@ stop-all-services:
 
 stop-all-services-dev:
 	@echo -e "$(GRAY)Stopping all services:$(COFF)"
-	@docker-compose -f docker-compose.yml down
+	@docker-compose -f docker-compose-dev.yml down
 
 stop-backend:
 	@echo -e "$(GRAY)Stopping backend services:$(COFF)"
@@ -126,11 +129,19 @@ stop-backend-dev:
 
 stop-frontend:
 	@echo -e "$(GRAY)Stopping frontend services:$(COFF)"
-	@docker-compose -f docker-compose.yml up down frontend
+	@docker-compose -f docker-compose.yml down frontend
 
 stop-frontend-dev:
 	@echo -e "$(GRAY)Stopping frontend services for development:$(COFF)"
 	@docker-compose -f docker-compose-dev.yml down frontend
+
+delete-all-volumes:
+	@echo -e "$(GREEN)Deleting all volumes:$(COFF)"
+	@docker-compose -f docker-compose.yml down -v
+
+delete-all-volumes-dev:
+	@echo -e "$(GREEN)Deleting all volumes in development:$(COFF)"
+	@docker-compose -f docker-compose-dev.yml down -v
 
 makemigrations:
 	@echo -e "$(PURPLE)Making migrations:$(COFF)"
@@ -150,19 +161,27 @@ migrate-dev:
 
 load-initial-data:
 	@echo -e "$(PURPLE)Loading django fixture:$(COFF)"
-	@docker-compose -f docker-compose-dev.yml run --rm backend ./manage.py loaddata projects/fixtures/initial.json
+	@docker-compose -f docker-compose-dev.yml run --rm backend python ./manage.py loaddata users/fixtures/users.json
 
 load-initial-data-dev:
 	@echo -e "$(PURPLE)Loading django fixture:$(COFF)"
-	@docker-compose -f docker-compose-dev.yml run --rm backend ./manage.py loaddata projects/fixtures/initial.json
+	@docker-compose -f docker-compose-dev.yml run --rm backend python ./manage.py loaddata users/fixtures/users.json
+
+load-gis-data:
+	@echo -e "$(PURPLE)Loading spatial data:$(COFF)"
+	@docker-compose -f docker-compose.yml run --rm backend python ./manage.py shell -c "from data import load_data; load_data.run()"
+
+load-gis-data-dev:
+	@echo -e "$(PURPLE)Loading spatial data in development:$(COFF)"
+	@docker-compose -f docker-compose-dev.yml run --rm backend python ./manage.py shell -c "from data import load_data; load_data.run()"
 
 create-superuser:
 	@echo -e "$(PURPLE)Creating Docker images:$(COFF)"
-	@docker-compose run --rm django ./manage.py createsuperuser
+	@docker-compose -f docker-compose.yml run --rm backend python ./manage.py createsuperuser
 
 create-superuser-dev:
 	@echo -e "$(PURPLE)Creating Docker images:$(COFF)"
-	@docker-compose run --rm django ./manage.py createsuperuser
+	@docker-compose -f docker-compose-dev.yml run --rm backend python ./manage.py createsuperuser
 
 collectstatic:
 	@echo -e "$(PURPLE)Copying static files and assets:$(COFF):$(COFF)"
