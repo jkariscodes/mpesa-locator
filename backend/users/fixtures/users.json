@@ -1,0 +1,24 @@
+[
+    {
+        "model": "users.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$KSimQ6CtOyv3TWGPKY9Fx2$oaLg+L3H6eDQE6+HssPXogxidTDAnbsWeYGlD8aPsoE=",
+            "username": "geoadmin",
+            "email": "geoadmin@email.com",
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true
+        }
+    },
+    {
+        "model": "users.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$rtniqJLLkHgPu0yWKVLTL5$XNnCJVmBkb4hXk+kBQtkbCsh6LbGFBfegBGjzd57aMY=",
+            "username": "josephkariuki",
+            "email": "jkariuki@email.com",
+            "is_active": true
+        }
+    }
+]
